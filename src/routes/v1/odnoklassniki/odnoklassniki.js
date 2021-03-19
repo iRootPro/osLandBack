@@ -9,4 +9,22 @@ router.get('/callback', async (req, res) => {
 router.get('/authLink', (req, res) => {
     return res.status(200).json({'link': okAuth.getAuthLink()})
 })
+
+router.get('/getAccessTokenOk/:code', async (req, res) => {
+    const {code} = req.params
+    try {
+        const response = await okAuth.getAccessToken(code)
+        if (response.data.access_token) {
+            return res.status(200).json({token: response.data.access_token})
+        }
+        if (response.data.error) {
+            return res.status(200).json({error: response.data.error})
+        }
+    } catch (e) {
+        console.error('Error get access token from server', e.message)
+    }
+
+
+})
+
 module.exports = router
